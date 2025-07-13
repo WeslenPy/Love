@@ -100,7 +100,7 @@ export default function RomanticLoveLetterGenerator() {
     if (keyShare) {
         try {
 
-            const response = await fetch(`http://localhost:3000/s/${keyShare}`,{method:"GET"})
+            const response = await fetch(`http://3.129.114.208:3000/s/${keyShare}`,{method:"GET"})
 
             const data = await response.json()
 
@@ -126,7 +126,7 @@ export default function RomanticLoveLetterGenerator() {
 
   // Função para gerar URL de compartilhamento
     const generateShareUrl = async () => {
-        const response = await fetch("http://localhost:3000/share",
+        const response = await fetch("http://3.129.114.208:3000/share",
             {method:"POST",headers:{"Content-Type":"application/json"},
             body:JSON.stringify(formData)})
 
