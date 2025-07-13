@@ -1,18 +1,20 @@
-# Etapa base
-FROM node:20-alpine
+# Etapa de build
+FROM node:20-alpine AS builder
 
-# Diretório de trabalho
 WORKDIR /app
-
-# Copia package.json e instala deps
-COPY package.json package-lock.json* ./
+COPY package*.json ./
 RUN npm install
-
-# Copia o restante do app
 COPY . .
+RUN npm run build
 
-# Porta usada pelo Vite
-EXPOSE 5173
+# Etapa final: servir com NGINX
+FROM nginx:stable-alpine AS production
 
-# Comando padrão (sobrescrito pelo docker-compose)
-CMD ["npm", "run", "dev"]
+# Copia o build para o diretório público do NGINX
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copia o arquivo de configuração customizado
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
